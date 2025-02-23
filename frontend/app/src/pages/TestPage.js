@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import giveSomeYummyStuff from '../api.js';
+import { Image } from 'antd';
+import arisImage from "../aris.png"
 
 function Mainpage() {
     const [colorIdx, setColorIdx] = useState(0);
@@ -31,6 +33,7 @@ function Mainpage() {
             <p>
                 Hi my name is {msg}
             </p>
+            <Image src={arisImage}/>
         </div>
     )
 }
