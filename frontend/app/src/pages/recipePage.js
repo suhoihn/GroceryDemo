@@ -43,6 +43,9 @@ const App = () => {
           ]}
         />
       </Sider>
+      <Content>
+        <p> testing wheter this shit works</p>
+      </Content>
       <Layout>
         <Header
           style={{
@@ -70,7 +73,7 @@ const App = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          something
+          Content
         </Content>
       </Layout>
     </Layout>
