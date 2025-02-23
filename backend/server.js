@@ -7,7 +7,7 @@ const PORT = 5000;
 const db = require('./db/db');
 db();
 
-const routes = require('./routes');
+const routers = require('./routes');
 
 // Defining routes here...
 console.log("Hello? WORLD?!?!?!?");
