@@ -4,7 +4,6 @@ const grocerySchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true,
     },
     weight: {
         type: Number,
@@ -14,6 +13,7 @@ const grocerySchema = new mongoose.Schema({
     boughtAt: {
         type: Date,
         default: Date.now,
+        required: true,
     },
     lastsFor: {
         type: Number,

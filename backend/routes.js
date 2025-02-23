@@ -32,18 +32,21 @@ router.post("/addTest", async (req, res) => {
     }
 });
 
-router.post("/createTable", async (req, res) => {
+// For real this time!
+
+router.put("/createTable", async (req, res) => {
     try {
-        createTable();
+        await createTable();
         res.status(200).json({ message: "New table created." })
     } catch (e) {
         res.status(400).json({ message: "Failed to initialise the table." });
     }
 });
 
-router.post("/queryTable", async (req, res) => {
+router.get("/queryTable", async (req, res) => {
     try {
-        const result = queryTable(req.body.searchString);
+        const result = await queryTable(req.query.searchString);
+        //console.log("About to send the result!", result)
         res.status(200).json({ result: result });
     } catch (e) {
         res.status(400).json({ message: "Failed to query the table." });
@@ -53,7 +56,9 @@ router.post("/queryTable", async (req, res) => {
 
 router.post("/addItem", async (req, res) => {
     try {
-        addItem(req.body.newItem);
+        console.log("HELLO?");
+        console.log(req.body)
+        const result = await addItem(req.body.newItem);
         res.status(200).json({ message: "New item added." })
     } catch (e) {
         res.status(400).json({ message: "Failed to initialise the table." });
@@ -61,9 +66,10 @@ router.post("/addItem", async (req, res) => {
 
 });
 
-router.post("/removeItem", async (req, res) => {
+router.put("/removeItem", async (req, res) => {
     try {
-        removeItem(req.body.id);
+        console.log("Removing!", req.body)
+        await removeItem(req.body.id);
         res.status(200).json({ message: "Removed." })
     } catch (e) {
         res.status(400).json({ message: "Failed to remove the item." });
@@ -71,9 +77,9 @@ router.post("/removeItem", async (req, res) => {
 
 });
 
-router.post("/updateItem", async (req, res) => {
+router.put("/updateItem", async (req, res) => {
     try {
-        updateItem(req.body.id, req.body.newWeight);
+        await updateItem(req.body.id, req.body.newWeight);
         res.status(200).json({ message: "Item update." })
     } catch (e) {
         res.status(400).json({ message: "Failed to update the table." });

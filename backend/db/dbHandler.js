@@ -2,62 +2,69 @@ const fs = require('fs');
 const csv = require('csv-parser');
 const groceryModel = require('./model/GrocerySchema');
 
-parseCSV = () => {
-    const result = [];
-    fs.createReadStream('data/groceries.csv')
-        .pipe(csv())
-        .on('data', (row) => {
-            result.push(row);
-        })
-        .on('end', () => {
-            console.log('CSV file successfully processed!');
-        })
-}
+const readCSV = async (filename) => {
+    return new Promise((resolve, reject) => {
+        const result = [];
+        
+        fs.createReadStream(filename)
+            .pipe(csv())
+            .on('data', (row) => {
+                result.push(row);
+            })
+            .on('end', () => {
+                console.log('CSV file successfully processed!');
+                resolve(result); // Resolving the Promise with the result
+            })
+            .on('error', (err) => {
+                reject(err); // Reject the Promise if there is an error
+            });
+    });
+};
 
 module.exports.createTable = async () => {
-    const listOfJSONs = parseCSV();
+    await groceryModel.deleteMany({});
+    const listOfJSONs = await readCSV('db/data/groceries.csv');
+    //console.log("creating new table.", listOfJSONs)
     const result = await groceryModel.insertMany(listOfJSONs)
         .then(result => {
             console.log("Insertion result...");
             console.log(result);
+            return result;
         })
         .catch(e => {
             console.log("Error inserting data...");
             console.log(e);
         });
-    return result;
 }
 
 module.exports.queryTable = async (searchString) => {
-    const result = await groceryModel.find({
-        name: {
-            $regex: searchString,
-            $options: 'i' // case-insensitive
-        }
-    })
-        .then(result => {
-            console.log("Insertion result...");
-            console.log(result);
-        })
-        .catch(e => {
-            console.log("Error inserting data...");
-            console.log(e);
-        });
-    return result;
+    console.log("Searching for: ", searchString);
+    try {
+        const result = await groceryModel.find({
+            name: {
+                $regex: searchString,
+                $options: 'i' // case-insensitive
+            }}
+        )
+        console.log("Query result...");
+        //console.log(result);
+        return result;
+    } catch (e) {
+        console.log("Error querying data...");
+        console.log(e);   
+    }
 }
 
 module.exports.addItem = async (newObject) => {
     const newGrocery = new groceryModel(newObject);
-    await newGrocery.save()
-        .then(result => {
-            console.log("Insertion result...");
-            console.log(result);
-        })
-        .catch(e => {
-            console.log("Error inserting data...");
-            console.log(e);
-        });
-    return result;
+    try {
+        const result = await newGrocery.save()
+        console.log("Insertion result...");
+        console.log(result);
+    } catch(e) {
+        console.log("Error inserting data...");
+        console.log(e);
+    };
 };
 
 module.exports.updateItem = async (id, newWeight) => {

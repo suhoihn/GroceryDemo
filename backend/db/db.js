@@ -9,7 +9,9 @@ function connect() {
             console.log(e)
         })
 
-    mongoose.connection.on("disconnected", connect);
+    mongoose.connection.on("disconnected", () => {
+        console.log("Disconnected from the database!");
+    });
 }
 
 module.exports = () => connect();
